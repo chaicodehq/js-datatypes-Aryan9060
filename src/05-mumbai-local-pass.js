@@ -42,5 +42,40 @@
  *   // => "INVALID PASS"
  */
 export function generateLocalPass(passenger) {
-  // Your code here
+
+
+  //Validate input
+  if (typeof passenger !== "object" || passenger == null) return "INVALID PASS";
+
+  if (passenger.name == undefined || passenger.from == undefined || passenger.to == undefined || passenger.classType == undefined) return "INVALID PASS";
+
+  if (passenger.name.trim() == "" || passenger.from.trim() == "" || passenger.to.trim() == "" || passenger.classType.trim() == "") return "INVALID PASS";
+
+  //convert string into lower case
+  let name = passenger.name.toLowerCase();
+  let from = passenger.from.toLowerCase();
+  let to = passenger.to.toLowerCase();
+  let classType = passenger.classType.toLowerCase();
+
+  //check for valid classType
+  if (classType !== 'first' && classType !== 'second') return "INVALID PASS";
+
+
+
+  // let lines = [`MUMBAI LOCAL PASS`,
+  //   `---`,
+  //   `Name: ${name.toUpperCase()}`,
+  //   `From: ${from.charAt(0).toUpperCase() + from.slice(1, from.length)}`,
+  //   `To: ${to.charAt(0).toUpperCase() + to.slice(1, to.length)}`,
+  //   `Class: ${classType.toUpperCase()}`,
+  //   `Pass ID: ${classType.charAt(0).toUpperCase() + from.slice(0, 3).toUpperCase() + to.slice(0, 3).toUpperCase()}`].join('\n');
+
+  return `MUMBAI LOCAL PASS
+---
+Name: ${name.toUpperCase()}
+From: ${from.charAt(0).toUpperCase() + from.slice(1, from.length)}
+To: ${to.charAt(0).toUpperCase() + to.slice(1, to.length)}
+Class: ${classType.toUpperCase()}
+Pass ID: ${classType.charAt(0).toUpperCase() + from.slice(0, 3).toUpperCase() + to.slice(0, 3).toUpperCase()}`;
+
 }
