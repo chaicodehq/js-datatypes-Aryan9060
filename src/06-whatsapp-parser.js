@@ -39,5 +39,34 @@
  *   //      text: "I love this song", wordCount: 4, sentiment: "love" }
  */
 export function parseWhatsAppMessage(message) {
-  // Your code here
+
+  //Input valigation  
+  if (typeof (message) !== 'string') return null;
+  if (message.includes(' - ') == false || message.includes(': ') == false) return null;
+
+  //Extracting each word
+  let str = message.split(' - ')
+  let dateTime = str[0].split(',')
+  let nameMessage = str[1].split(': ')
+  console.log(str);
+
+
+  //Refining date
+  let date = dateTime[0].trim();
+  let time = dateTime[1].trim();
+  let name = nameMessage[0].trim();
+  let text = nameMessage[1];
+  let sentiment = '';
+
+
+  let testText = text?.toLowerCase()
+
+  //Pridicting sentiment of sender
+  if (testText?.includes("😂") == true || testText?.includes(":)") == true || testText?.includes("haha") == true) sentiment = "funny";
+  else if (testText?.includes("❤") == true || testText?.includes("love") == true || testText?.includes("pyaar") == true) sentiment = "love";
+  else sentiment = "neutral";
+
+
+  return { date: date, time: time, sender: name, text: text, wordCount: text?.split(" ").length, sentiment: sentiment }
+
 }

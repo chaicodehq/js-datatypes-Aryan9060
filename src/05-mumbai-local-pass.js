@@ -60,16 +60,6 @@ export function generateLocalPass(passenger) {
   //check for valid classType
   if (classType !== 'first' && classType !== 'second') return "INVALID PASS";
 
-
-
-  // let lines = [`MUMBAI LOCAL PASS`,
-  //   `---`,
-  //   `Name: ${name.toUpperCase()}`,
-  //   `From: ${from.charAt(0).toUpperCase() + from.slice(1, from.length)}`,
-  //   `To: ${to.charAt(0).toUpperCase() + to.slice(1, to.length)}`,
-  //   `Class: ${classType.toUpperCase()}`,
-  //   `Pass ID: ${classType.charAt(0).toUpperCase() + from.slice(0, 3).toUpperCase() + to.slice(0, 3).toUpperCase()}`].join('\n');
-
   return `MUMBAI LOCAL PASS
 ---
 Name: ${name.toUpperCase()}
