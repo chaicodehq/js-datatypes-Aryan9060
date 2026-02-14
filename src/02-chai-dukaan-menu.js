@@ -41,7 +41,7 @@ export function formatChaiMenu(items) {
   // FilterOut
   let arr = items.filter(isValid)
 
-  // Declear empty array
+  // Declaration empty array
   let newArray = [];
 
   arr?.map((item) => {
