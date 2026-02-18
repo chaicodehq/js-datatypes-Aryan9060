@@ -62,5 +62,56 @@
  *   // => { isValid: false, errors: { name: "...", email: "...", ... } }
  */
 export function validateForm(formData) {
-  // Your code here
+  if (!formData || typeof formData !== "object") return null;
+
+  let errors = {};
+  if (
+    !formData.name ||
+    formData.name.trim() == "" ||
+    formData.name.length < 2 ||
+    formData.name.length > 50
+  )
+    errors.name = "Name must be 2-50 characters";
+
+  if (
+    !formData.email ||
+    formData.email.trim() == "" ||
+    !formData.email.includes("@") ||
+    !formData.email.includes(".") ||
+    formData.email.indexOf("@") !== formData.email.lastIndexOf("@")
+  ) {
+    errors.email = "Invalid email format";
+  }
+
+  if (
+    !formData.phone ||
+    typeof formData.phone !== "string" ||
+    formData.phone.trim() === "" ||
+    formData.phone.length < 0 ||
+    !/^[6-9]\d{9}$/.test(formData.phone)
+  )
+    errors.phone = "Invalid Indian phone number";
+
+  let age = formData.age;
+  age = Number(age);
+
+  if (!age || !Number.isInteger(age) || age < 16 || age > 100)
+    errors.age = "Age must be an integer between 16 and 100";
+
+  if (
+    !formData.pincode ||
+    typeof formData.pincode !== "string" ||
+    !/^[1-9]\d{5}$/.test(formData.pincode)
+  )
+    errors.pincode = "Invalid Indian pincode";
+
+  if (!formData?.state ?? "") errors.state = "State is required";
+
+  if (!Boolean(formData.agreeTerms) === true)
+    errors.agreeTerms = "Must agree to terms";
+
+  let isValid = false;
+  if (Object.keys(errors).length === 0) isValid = true;
+
+  return { isValid, errors };
 }
