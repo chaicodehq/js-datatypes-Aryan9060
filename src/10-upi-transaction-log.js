@@ -47,5 +47,81 @@
  *   //      frequentContact: "Swiggy", allAbove100: false, hasLargeTransaction: true }
  */
 export function analyzeUPITransactions(transactions) {
-  // Your code here
+  //Validation of transaction array
+  if (!Array.isArray(transactions) || transactions.length === 0) return null;
+
+  let totalCredit = null;
+  let totalDebit = null;
+  let allAbove100 = false;
+  let transactionCount = null;
+  let highestAmount = null;
+
+  let hasLargeTransaction = transactions
+    .map((e) => e.amount)
+    .some((e) => e >= 5000);
+
+  let categoryBreakdown = transactions.reduce((acc, transaction) => {
+    acc[transaction.category] =
+      (acc[transaction.category] || 0) + transaction.amount;
+    return acc;
+  }, {});
+
+  let frequentContact = Object.entries(
+    transactions.reduce((acc, transaction) => {
+      acc[transaction.to] = (acc[transaction.to] || 0) + 1;
+      return acc;
+    }, {}),
+  ).sort((a, b) => b[1] - a[1])[0][0];
+
+  for (const transaction of transactions) {
+
+    //Skipping condition for amount and type
+    if (!transaction.amount || transaction.amount <= 0) continue;
+    if (
+      !transaction.type ||
+      (transaction.type.toLowerCase() != "credit" &&
+        transaction.type.toLowerCase() != "debit")
+    )
+      continue;
+
+    transactionCount++;
+
+    if (transaction.type == "credit") totalCredit += transaction.amount;
+    else if (transaction.type == "debit") totalDebit += transaction.amount;
+
+
+    if (highestAmount < transaction.amount) highestAmount = transaction.amount;
+
+    if (categoryBreakdown[transaction.category]) {
+      categoryBreakdown[transaction.category] += transaction.amount;
+    } else {
+      categoryBreakdown[transaction.category] = transaction.amount;
+    }
+
+    let flag = 0;
+    if (transaction.amount >= 100) flag++;
+    if (flag == transactionCount) allAbove100 = true;
+  }
+
+  let netBalance = totalCredit - totalDebit;
+  let avgTransaction = parseFloat(
+    (totalCredit + totalDebit) / transactionCount,
+  ).toFixed(2);
+
+  let highestTransaction = transactions.filter(
+    (e) => e.amount === highestAmount,
+  )[0]
+
+  return {
+    totalCredit,
+    totalDebit,
+    netBalance,
+    transactionCount,
+    avgTransaction,
+    highestTransaction,
+    categoryBreakdown,
+    frequentContact,
+    allAbove100,
+    hasLargeTransaction,
+  };
 }
