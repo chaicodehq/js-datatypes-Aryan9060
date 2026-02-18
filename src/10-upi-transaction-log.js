@@ -50,11 +50,11 @@ export function analyzeUPITransactions(transactions) {
   //Validation of transaction array
   if (!Array.isArray(transactions) || transactions.length === 0) return null;
 
-  let totalCredit = null;
-  let totalDebit = null;
-  let allAbove100 = false;
-  let transactionCount = null;
-  let highestAmount = null;
+  let totalCredit = 0;
+  let totalDebit = 0;
+  let allAbove100 = transactions.every((e) => e.amount > 100);
+  let transactionCount = 0;
+  let highestAmount = 0;
 
   let hasLargeTransaction = transactions
     .map((e) => e.amount)
@@ -74,7 +74,6 @@ export function analyzeUPITransactions(transactions) {
   ).sort((a, b) => b[1] - a[1])[0][0];
 
   for (const transaction of transactions) {
-
     //Skipping condition for amount and type
     if (!transaction.amount || transaction.amount <= 0) continue;
     if (
@@ -89,28 +88,19 @@ export function analyzeUPITransactions(transactions) {
     if (transaction.type == "credit") totalCredit += transaction.amount;
     else if (transaction.type == "debit") totalDebit += transaction.amount;
 
-
     if (highestAmount < transaction.amount) highestAmount = transaction.amount;
-
-    if (categoryBreakdown[transaction.category]) {
-      categoryBreakdown[transaction.category] += transaction.amount;
-    } else {
-      categoryBreakdown[transaction.category] = transaction.amount;
-    }
-
-    let flag = 0;
-    if (transaction.amount >= 100) flag++;
-    if (flag == transactionCount) allAbove100 = true;
   }
+  
+  if (transactionCount === 0) return null;
 
   let netBalance = totalCredit - totalDebit;
-  let avgTransaction = parseFloat(
-    (totalCredit + totalDebit) / transactionCount,
-  ).toFixed(2);
+  let avgTransaction = Number(
+    parseFloat((totalCredit + totalDebit) / transactionCount).toFixed(2),
+  );
 
   let highestTransaction = transactions.filter(
     (e) => e.amount === highestAmount,
-  )[0]
+  )[0];
 
   return {
     totalCredit,
